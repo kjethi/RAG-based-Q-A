@@ -7,6 +7,7 @@ import Logout from './components/auth/Logout'
 import UserManagement from './pages/admin/UserManagement'
 import Documents from './pages/documents/Documents'
 import Ingestion from './pages/ingestion/Ingestion'
+import QA from './pages/qa/QA'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/documents" element={<Documents />} />
         <Route path="/ingestion" element={<Ingestion />} />
+        <Route path="/qa" element={<QA />} />
       </Route>
       <Route
         path="*"
