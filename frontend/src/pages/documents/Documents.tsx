@@ -1,65 +1,98 @@
-import { useRef, useState } from 'react'
+import { useRef, useState } from "react";
 
+type DocumentType = "pdf" | "image" | "text" | "other";
 type DocumentRow = {
-  id: string
-  name: string
-  sizeBytes: number
-  type: 'pdf' | 'image' | 'text' | 'other'
-  uploadedAt: string
-  status: 'indexed' | 'processing' | 'error'
-}
+  id: string;
+  name: string;
+  sizeBytes: number;
+  type: DocumentType;
+  uploadedAt: string;
+  status: "indexed" | "processing" | "error";
+};
 
 const mockDocuments: DocumentRow[] = [
-  { id: 'd1', name: 'Product Spec.pdf', sizeBytes: 1_234_567, type: 'pdf', uploadedAt: '2025-04-01 10:22', status: 'indexed' },
-  { id: 'd2', name: 'Meeting Notes.txt', sizeBytes: 54_321, type: 'text', uploadedAt: '2025-04-03 08:10', status: 'indexed' },
-  { id: 'd3', name: 'Screenshot.png', sizeBytes: 734_002, type: 'image', uploadedAt: '2025-04-05 16:45', status: 'processing' },
-]
+  {
+    id: "d1",
+    name: "Product Spec.pdf",
+    sizeBytes: 1_234_567,
+    type: "pdf",
+    uploadedAt: "2025-04-01 10:22",
+    status: "indexed",
+  },
+  {
+    id: "d2",
+    name: "Meeting Notes.txt",
+    sizeBytes: 54_321,
+    type: "text",
+    uploadedAt: "2025-04-03 08:10",
+    status: "indexed",
+  },
+  {
+    id: "d3",
+    name: "Screenshot.png",
+    sizeBytes: 734_002,
+    type: "image",
+    uploadedAt: "2025-04-05 16:45",
+    status: "processing",
+  },
+];
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B'
-  const k = 1024
-  const sizes = ['B', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 
-function badgeForType(type: DocumentRow['type']) {
-  const map = { pdf: 'danger', image: 'info', text: 'secondary', other: 'light' } as const
-  return <span className={`badge text-bg-${map[type]}`}>{type.toUpperCase()}</span>
+function badgeForType(type: DocumentRow["type"]) {
+  const map = {
+    pdf: "danger",
+    image: "info",
+    text: "secondary",
+    other: "light",
+  } as const;
+  return (
+    <span className={`badge text-bg-${map[type]}`}>{type.toUpperCase()}</span>
+  );
 }
 
-function badgeForStatus(status: DocumentRow['status']) {
-  const map = { indexed: 'success', processing: 'warning', error: 'danger' } as const
-  return <span className={`badge text-bg-${map[status]}`}>{status}</span>
+function badgeForStatus(status: DocumentRow["status"]) {
+  const map = {
+    indexed: "success",
+    processing: "warning",
+    error: "danger",
+  } as const;
+  return <span className={`badge text-bg-${map[status]}`}>{status}</span>;
 }
 
 function Documents() {
-  const [documents, setDocuments] = useState<DocumentRow[]>(mockDocuments)
-  const [query, setQuery] = useState('')
-  const [typeFilter, setTypeFilter] = useState<'all' | 'pdf' | 'image' | 'text' | 'other'>('all')
-  const [uploadingFiles, setUploadingFiles] = useState<File[]>([])
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const [documents, setDocuments] = useState<DocumentRow[]>(mockDocuments);
+  const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<"all" | DocumentType>("all");
+  const [uploadingFiles, setUploadingFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const filtered = documents.filter((d) => {
-    const matchesQuery = d.name.toLowerCase().includes(query.toLowerCase())
-    const matchesType = typeFilter === 'all' ? true : d.type === typeFilter
-    return matchesQuery && matchesType
-  })
+    const matchesQuery = d.name.toLowerCase().includes(query.toLowerCase());
+    const matchesType = typeFilter === "all" ? true : d.type === typeFilter;
+    return matchesQuery && matchesType;
+  });
 
   function openFilePicker() {
-    fileInputRef.current?.click()
+    fileInputRef.current?.click();
   }
 
   function handleFilesSelected(files: FileList | null) {
-    if (!files || files.length === 0) return
-    const selected = Array.from(files)
-    setUploadingFiles(selected)
+    if (!files || files.length === 0) return;
+    const selected = Array.from(files);
+    setUploadingFiles(selected);
     // TODO: Upload files to backend with progress; on success, refresh list
   }
 
   function handleDeleteDocument(id: string) {
     // TODO: Call backend to delete, confirm dialog, then refresh
-    setDocuments((prev) => prev.filter((d) => d.id !== id))
+    setDocuments((prev) => prev.filter((d) => d.id !== id));
   }
 
   return (
@@ -87,7 +120,9 @@ function Documents() {
             <option value="text">Text</option>
             <option value="other">Other</option>
           </select>
-          <button className="btn btn-primary" onClick={openFilePicker}>Upload</button>
+          <button className="btn btn-primary" onClick={openFilePicker}>
+            Upload
+          </button>
           <input
             ref={fileInputRef}
             type="file"
@@ -108,12 +143,21 @@ function Documents() {
                   <div className="d-flex justify-content-between">
                     <div>
                       <div className="fw-medium">{f.name}</div>
-                      <div className="text-secondary small">{formatBytes(f.size)}</div>
+                      <div className="text-secondary small">
+                        {formatBytes(f.size)}
+                      </div>
                     </div>
                     <div className="text-secondary small">Queued</div>
                   </div>
-                  <div className="progress mt-2" role="progressbar" aria-label="Upload progress" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                    <div className="progress-bar" style={{ width: '25%' }} />
+                  <div
+                    className="progress mt-2"
+                    role="progressbar"
+                    aria-label="Upload progress"
+                    aria-valuenow={25}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
+                    <div className="progress-bar" style={{ width: "25%" }} />
                   </div>
                 </div>
               ))}
@@ -140,7 +184,9 @@ function Documents() {
             {filtered.map((d, idx) => (
               <tr key={d.id}>
                 <td>{idx + 1}</td>
-                <td className="text-truncate" style={{ maxWidth: 380 }}>{d.name}</td>
+                <td className="text-truncate" style={{ maxWidth: 380 }}>
+                  {d.name}
+                </td>
                 <td>{badgeForType(d.type)}</td>
                 <td>{formatBytes(d.sizeBytes)}</td>
                 <td className="text-secondary">{d.uploadedAt}</td>
@@ -149,14 +195,21 @@ function Documents() {
                   <div className="btn-group btn-group-sm" role="group">
                     <button className="btn btn-outline-light">View</button>
                     <button className="btn btn-outline-light">Download</button>
-                    <button className="btn btn-outline-danger" onClick={() => handleDeleteDocument(d.id)}>Delete</button>
+                    <button
+                      className="btn btn-outline-danger"
+                      onClick={() => handleDeleteDocument(d.id)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center text-secondary py-4">No documents found</td>
+                <td colSpan={7} className="text-center text-secondary py-4">
+                  No documents found
+                </td>
               </tr>
             )}
           </tbody>
@@ -164,20 +217,28 @@ function Documents() {
       </div>
 
       <div className="d-flex justify-content-between align-items-center">
-        <div className="text-secondary small">Showing {filtered.length} of {documents.length}</div>
+        <div className="text-secondary small">
+          Showing {filtered.length} of {documents.length}
+        </div>
         <nav>
           <ul className="pagination pagination-sm mb-0">
-            <li className="page-item disabled"><span className="page-link">Prev</span></li>
-            <li className="page-item active"><span className="page-link">1</span></li>
-            <li className="page-item"><span className="page-link">2</span></li>
-            <li className="page-item"><span className="page-link">Next</span></li>
+            <li className="page-item disabled">
+              <span className="page-link">Prev</span>
+            </li>
+            <li className="page-item active">
+              <span className="page-link">1</span>
+            </li>
+            <li className="page-item">
+              <span className="page-link">2</span>
+            </li>
+            <li className="page-item">
+              <span className="page-link">Next</span>
+            </li>
           </ul>
         </nav>
       </div>
     </div>
-  )
+  );
 }
 
-export default Documents
-
-
+export default Documents;
