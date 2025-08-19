@@ -24,6 +24,12 @@ function AppLayout() {
               <li className="nav-item">
                 <NavLink to="/admin/users" className="nav-link">User Management</NavLink>
               </li>
+              <li className="nav-item">
+                <NavLink to="/documents" className="nav-link">Documents</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/ingestion" className="nav-link">Ingestion</NavLink>
+              </li>
             </ul>
 
             <div className="d-flex">
