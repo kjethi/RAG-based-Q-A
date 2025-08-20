@@ -96,3 +96,72 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+# NestJS Authentication API
+
+A complete authentication system built with NestJS, PostgreSQL, and JWT.
+
+## Features
+
+- User registration and login
+- JWT-based authentication
+- Role-based access control (Admin, Editor, Viewer)
+- PostgreSQL database integration
+- Password hashing with bcrypt
+- Input validation with class-validator
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- PostgreSQL database
+- npm or yarn
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up your environment variables by creating a `.env` file in the root directory:
+   ```env
+   # Database Configuration
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=postgres
+   DB_PASSWORD=your_password
+   DB_NAME=nest_auth_db
+   DB_SYNC=true
+   DB_LOGGING=false
+
+   # JWT Configuration
+   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+
+   # Application Configuration
+   PORT=3000
+   NODE_ENV=development
+   ```
+
+4. Create a PostgreSQL database named `nest_auth_db`
+
+5. Run the application:
+   ```bash
+   npm run start:dev
+   ```
+
+## Development
+
+```bash
+# Run in development mode
+npm run start:dev
+
+# Run tests
+npm run test
+
+# Run e2e tests
+npm run test:e2e
+
+# Build for production
+npm run build
+```
