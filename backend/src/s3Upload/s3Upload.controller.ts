@@ -72,7 +72,6 @@ export class S3UploadController {
         dto.uploadId,
         dto.parts,
       );
-      // TODO: we can queue this docuement for injestion once we have that service ready
     } catch (error) {
       console.error('Complete upload failed:', error);
       if (error instanceof BadRequestException) throw error;

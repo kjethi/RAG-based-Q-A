@@ -9,13 +9,18 @@ import {
   HeadObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
+
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DocumentService } from 'src/document/document.service';
 
 @Injectable()
 export class S3UploadService {
   private s3: S3Client;
+  private sqs: SQSClient;
+
   private bucket: string;
+  private queueUrl: string;
   constructor(
     private ConfigService: ConfigService,
     private documentService: DocumentService,
@@ -25,6 +30,8 @@ export class S3UploadService {
     const secretAccessKey = this.ConfigService.get<string>(
       'AWS_SECRET_ACCESS_KEY',
     );
+    const sqsQueueUrl = this.ConfigService.get<string>('AWS_SQS_QUEUE_URL');
+
     const bucket = this.ConfigService.get<string>('AWS_S3_BUCKET');
 
     if (!region || !accessKeyId || !secretAccessKey) {
@@ -32,9 +39,13 @@ export class S3UploadService {
         'Missing AWS configuration: region, accessKeyId, or secretAccessKey',
       );
     }
+    if (!sqsQueueUrl)
+      throw new Error('SQS_QUEUE_URL is not defined in environment variables');
+
     if (!bucket)
       throw new Error('AWS_S3_BUCKET is not defined in environment variables');
 
+    // S3 Client
     this.s3 = new S3Client({
       region,
       credentials: {
@@ -43,6 +54,19 @@ export class S3UploadService {
       },
     });
 
+    // SQS Client
+    this.sqs = new SQSClient({
+      region: region,
+      credentials: {
+        accessKeyId: accessKeyId,
+        secretAccessKey: secretAccessKey,
+      },
+    });
+
+    // SQS Queue URL
+    this.queueUrl = sqsQueueUrl;
+
+    // S3 Bucket
     this.bucket = bucket;
   }
 
@@ -73,7 +97,6 @@ export class S3UploadService {
     uploadId: string,
     parts: { ETag: string; PartNumber: number }[],
   ) {
-   
     // 1. Complete upload in S3
     const command = new CompleteMultipartUploadCommand({
       Bucket: this.bucket,
@@ -91,12 +114,29 @@ export class S3UploadService {
     );
 
     // 2. Insert into DB only after success
-    const file = this.documentService.create({
+    const file = await this.documentService.create({
       filename: key,
       mimetype: head.ContentType!,
       size: head.ContentLength!,
-      s3Path : s3Result.Location!
+      s3Path: s3Result.Location!,
     });
+
+    // 4. Send SQS message for embedding
+    const messageBody = JSON.stringify({
+      documentId: file.id, // link back to DB record
+      key: key,
+      bucket: this.bucket,
+      mimetype: head.ContentType,
+      size: head.ContentLength,
+      s3Path: s3Result.Location,
+    });
+
+    await this.sqs.send(
+      new SendMessageCommand({
+        QueueUrl: this.queueUrl,
+        MessageBody: messageBody,
+      }),
+    );
 
     return { location: s3Result.Location, file };
   }
@@ -110,7 +150,7 @@ export class S3UploadService {
 
     return this.s3.send(command);
   }
-  
+
   async deleteFile(key: string) {
     try {
       const command = new DeleteObjectCommand({
