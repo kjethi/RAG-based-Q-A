@@ -8,6 +8,7 @@ import {
   UseGuards,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -16,6 +17,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../common/enums/user-role.enum';
 import { StatusUpdateUserDto } from './dto/status-update-user.dto';
+import { getUserQueryDto } from './dto/get-user.dto';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,8 +26,8 @@ export class UsersController {
 
   @Get()
   @Roles(UserRole.ADMIN)
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() filterQuery?: getUserQueryDto) { 
+    return this.usersService.findAll(filterQuery);
   }
 
   @Patch(':id')
