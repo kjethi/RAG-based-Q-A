@@ -7,10 +7,12 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { getDatabaseConfig } from './config/database.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import commonConfig from './config/common.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      load : [commonConfig],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
