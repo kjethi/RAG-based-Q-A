@@ -8,16 +8,19 @@ import {
 } from 'typeorm';
 
 @Entity('document')
-export class Document {
+export class DocumentEnity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ unique: true })
-  name: string;
+  filename: string;
+
+  @Column()
+  s3Path: string;
 
   @Column()
   type: string;
-
+  
   @Column()
   size: number;
 

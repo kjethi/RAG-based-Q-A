@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { getDatabaseConfig } from './config/database.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import commonConfig from './config/common.config';
+import { DocumentModule } from './document/document.module';
+import { S3UploadModule } from './s3Upload/s3Upload.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import commonConfig from './config/common.config';
     }),
     AuthModule,
     UsersModule,
+    DocumentModule,
+    S3UploadModule,
   ],
   controllers: [AppController],
   providers: [
