@@ -5,6 +5,7 @@ import { DocumentEnity } from './entities/document.entity';
 import { DocumentStatus } from 'src/common/enums/document-status.enum';
 import { FilterDocumentDto } from './dto/filter-document.dto';
 import { ConfigService } from '@nestjs/config';
+import { UpdateDocumentDto } from './dto/update-document.dto';
 
 @Injectable()
 export class DocumentService {
@@ -13,6 +14,10 @@ export class DocumentService {
     private readonly documentRepo: Repository<DocumentEnity>,
     private configService: ConfigService,
   ) {}
+
+  async findById(id: string): Promise<DocumentEnity | null> {
+    return this.documentRepo.findOne({ where: { id } });
+  }
 
   async create(file: {
     filename: string;
@@ -28,6 +33,13 @@ export class DocumentService {
       s3Path: file.s3Path,
     });
     return this.documentRepo.save(doc);
+  }
+
+  async update(id: string, dto: UpdateDocumentDto) {
+    const docuemnt = await this.findById(id);
+    if (!docuemnt) throw new NotFoundException('Document not found');
+    Object.assign(docuemnt, { ...dto });
+    return this.documentRepo.save(docuemnt);
   }
 
   async findOne(id: string) {

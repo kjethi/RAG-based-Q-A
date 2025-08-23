@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class InitUploadDto {
   @ApiProperty({ example: 'file.pdf', description: 'File name to upload' })
@@ -8,11 +8,17 @@ export class InitUploadDto {
 }
 
 export class PresignPartDto {
-  @ApiProperty({ example: 'file.pdf', description: 'File name (S3 object key)' })
+  @ApiProperty({
+    example: 'file.pdf',
+    description: 'File name (S3 object key)',
+  })
   @IsString()
   filename: string;
 
-  @ApiProperty({ example: 'abc123-upload-id', description: 'S3 uploadId for this multipart upload' })
+  @ApiProperty({
+    example: 'abc123-upload-id',
+    description: 'S3 uploadId for this multipart upload',
+  })
   @IsString()
   uploadId: string;
 
@@ -22,11 +28,17 @@ export class PresignPartDto {
 }
 
 export class CompleteUploadDto {
-  @ApiProperty({ example: 'file.pdf', description: 'Final file name (S3 object key)' })
+  @ApiProperty({
+    example: 'file.pdf',
+    description: 'Final file name (S3 object key)',
+  })
   @IsString()
   filename: string;
 
-  @ApiProperty({ example: 'abc123-upload-id', description: 'S3 uploadId for this multipart upload' })
+  @ApiProperty({
+    example: 'abc123-upload-id',
+    description: 'S3 uploadId for this multipart upload',
+  })
   @IsString()
   uploadId: string;
 
@@ -40,4 +52,11 @@ export class CompleteUploadDto {
     ],
   })
   parts: { ETag: string; PartNumber: number }[];
+}
+
+export class AddPendingDocumentToSqsDto {
+  @ApiProperty({ required: false, example: 'UUID' })
+  @IsOptional()
+  @IsString()
+  id: string;
 }

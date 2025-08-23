@@ -13,6 +13,16 @@ import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DocumentService } from 'src/document/document.service';
+import { DocumentStatus } from 'src/common/enums/document-status.enum';
+
+interface SqsMessage {
+  documentId: string;
+  key: string;
+  bucket: string;
+  mimetype: string;
+  size: number;
+  s3Path: string;
+}
 
 @Injectable()
 export class S3UploadService {
@@ -122,25 +132,46 @@ export class S3UploadService {
     });
 
     // 4. Send SQS message for embedding
-    const messageBody = JSON.stringify({
+    const messageBody: SqsMessage = {
       documentId: file.id, // link back to DB record
       key: key,
       bucket: this.bucket,
-      mimetype: head.ContentType,
-      size: head.ContentLength,
-      s3Path: s3Result.Location,
-    });
-
-    await this.sqs.send(
-      new SendMessageCommand({
-        QueueUrl: this.queueUrl,
-        MessageBody: messageBody,
-      }),
-    );
-
+      mimetype: head.ContentType || '',
+      size: head.ContentLength || 0,
+      s3Path: s3Result.Location || '',
+    };
+    this.sendMessageToQueue(file.id, messageBody);
     return { location: s3Result.Location, file };
   }
 
+  async sendPendingDocuementInQueue(id?: string) {
+    let documents;
+    if (id) {
+      const document = await this.documentService.findById(id);
+      if (document && document.status === DocumentStatus.PENDING) {
+        documents = [document];
+      }
+    } else {
+      const result = await this.documentService.findAll({
+        status: DocumentStatus.PENDING,
+        limit: 10,
+      });
+      documents = result.documents;
+    }
+    if (!documents || documents.length === 0) return;
+    for (const document of documents) {
+      const messageBody: SqsMessage = {
+        documentId: document.id, // link back to DB record
+        key: document.s3Path.split('/').pop() || '',
+        bucket: this.bucket,
+        mimetype: document.type || '',
+        size: document.size || 0,
+        s3Path: document.s3Path || '',
+      };
+      await this.sendMessageToQueue(document.id, messageBody);
+    }
+    return { message: `${documents.length} document(s) sent to queue` };
+  }
   async abortMultipartUpload(key: string, uploadId: string) {
     const command = new AbortMultipartUploadCommand({
       Bucket: this.bucket,
@@ -165,5 +196,18 @@ export class S3UploadService {
       console.error('S3 delete error:', error);
       throw error;
     }
+  }
+
+  async sendMessageToQueue(id: string, messageBody: SqsMessage) {
+    const command = new SendMessageCommand({
+      QueueUrl: this.queueUrl,
+      MessageBody: JSON.stringify(messageBody),
+    });
+    this.documentService.update(id, {status: DocumentStatus.QUEUED});
+    return this.sqs.send(command);
+  }
+  catch(error) {
+    // TODO : handle logging
+    console.error('SQS send message error:', error);
   }
 }

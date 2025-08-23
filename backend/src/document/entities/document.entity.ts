@@ -30,6 +30,9 @@ export class DocumentEnity {
     default: DocumentStatus.PENDING,
   })
   status: DocumentStatus;
+  
+  @Column({nullable: true})
+  message: string;
 
   @CreateDateColumn()
   createdAt: Date;

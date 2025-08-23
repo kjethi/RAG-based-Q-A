@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { S3UploadService } from './s3Upload.service';
 import {
+  AddPendingDocumentToSqsDto,
   CompleteUploadDto,
   InitUploadDto,
   PresignPartDto,
@@ -81,10 +82,15 @@ export class S3UploadController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    let document = await this.documentService.findOne(id)
+    let document = await this.documentService.findOne(id);
     //TODO: Remove from Vector DB as well - Which we can do once we have that service ready
-    if(!document) throw new BadRequestException('Document not found');
+    if (!document) throw new BadRequestException('Document not found');
     await this.s3Service.deleteFile(document.s3Path);
     return this.documentService.remove(id);
+  }
+
+  @Post('send-sqs-pending')
+  async addPendingDocumentToSqs(@Body() body?: AddPendingDocumentToSqsDto) {
+    return this.s3Service.sendPendingDocuementInQueue(body?.id);
   }
 }
