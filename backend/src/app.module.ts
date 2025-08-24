@@ -10,6 +10,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import commonConfig from './config/common.config';
 import { DocumentModule } from './document/document.module';
 import { S3UploadModule } from './s3Upload/s3Upload.module';
+import { QaModule } from './qa/qa.module';
+import { ServiceAuthModule } from './service/service-auth.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { S3UploadModule } from './s3Upload/s3Upload.module';
     UsersModule,
     DocumentModule,
     S3UploadModule,
+    QaModule,
+    ServiceAuthModule,
   ],
   controllers: [AppController],
   providers: [
