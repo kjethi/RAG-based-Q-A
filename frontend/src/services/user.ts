@@ -3,6 +3,13 @@ import type { User, UserRole } from "../classes/User";
 import { apiGet, apiPut } from "./api";
 import type { MetaData } from "../classes/MetaData";
 
+interface UserFilters {
+  search?: string;
+  role?: UserRole;
+  offset?: number;
+  limit?: number;
+}
+
 export const userService = {
   async getMyUser() {
     try {
@@ -20,10 +27,17 @@ export const userService = {
       return Promise.reject(errorDetail);
     }
   },
-  async fetchUsers(): Promise<{ meta: MetaData; users: User[] }> {
+  
+  async fetchUsers(filters?: UserFilters): Promise<{ meta: MetaData; users: User[] }> {
     try {
+      const params = new URLSearchParams();
+      if (filters?.search) params.append('search', filters.search);
+      if (filters?.role) params.append('role', filters.role);
+      if (filters?.offset !== undefined) params.append('offset', filters.offset.toString());
+      if (filters?.limit !== undefined) params.append('limit', filters.limit.toString());
+
       const res = await apiGet<{ data: { meta: MetaData; users: User[] } }>(
-        "/users"
+        `/users${params.toString() ? `?${params.toString()}` : ''}`
       );
       return res.data.data;
     } catch (error) {

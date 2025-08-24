@@ -7,7 +7,7 @@ function AppLayout() {
     <div className="min-vh-100 d-flex flex-column">
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
         <div className="container">
-          <Link className="navbar-brand" to="/admin">
+          <Link className="navbar-brand" to="/">
             RAG App
           </Link>
 
