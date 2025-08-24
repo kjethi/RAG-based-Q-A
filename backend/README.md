@@ -1,167 +1,253 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Document Management System Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust NestJS-based backend application for managing documents, user authentication, and Q&A functionality with AI-powered document processing.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **User Authentication & Authorization**: JWT-based authentication with role-based access control
+- **Document Management**: Upload, store, and manage documents with metadata
+- **AI-Powered Q&A**: Ask questions about uploaded documents using AI
+- **S3 Integration**: Secure file storage using AWS S3
+- **Queue Processing**: Asynchronous document processing using AWS SQS
+- **RESTful API**: Well-structured API endpoints with Swagger documentation
+- **Database**: PostgreSQL with TypeORM for data persistence
+- **Security**: Input validation, CORS, and IP whitelisting
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🛠️ Tech Stack
 
-## Project setup
+- **Framework**: NestJS 11.x
+- **Language**: TypeScript
+- **Database**: PostgreSQL with TypeORM
+- **Authentication**: JWT with Passport.js
+- **File Storage**: AWS S3
+- **Message Queue**: AWS SQS
+- **Documentation**: Swagger/OpenAPI
+- **Testing**: Jest
+- **Code Quality**: ESLint, Prettier
 
-```bash
-$ npm install
-```
+## 📋 Prerequisites
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
-# NestJS Authentication API
-
-A complete authentication system built with NestJS, PostgreSQL, and JWT.
-
-## Features
-
-- User registration and login
-- JWT-based authentication
-- Role-based access control (Admin, Editor, Viewer)
-- PostgreSQL database integration
-- Password hashing with bcrypt
-- Input validation with class-validator
-
-## Prerequisites
-
-- Node.js (v18 or higher)
+- Node.js (v20 or higher)
 - PostgreSQL database
-- npm or yarn
+- AWS account with S3 and SQS access
+- Python 3.8+ (for RAG backend integration)
 
-## Installation
+## 🔧 Installation
 
-1. Clone the repository
-2. Install dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd backend
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. Set up your environment variables by creating a `.env` file in the root directory:
+3. **Environment Configuration**
+   Create a `.env` file in the root directory:
    ```env
    # Database Configuration
    DB_HOST=localhost
    DB_PORT=5432
-   DB_USERNAME=postgres
+   DB_USERNAME=your_username
    DB_PASSWORD=your_password
-   DB_NAME=nest_auth_db
+   DB_NAME=your_database_name
    DB_SYNC=true
-   DB_LOGGING=false
-
+   DB_LOGGING=true
+   
    # JWT Configuration
-   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-
+   JWT_SECRET=your_jwt_secret_key
+   JWT_EXPIRES_IN=24h
+   
+   # AWS Configuration
+   AWS_REGION=us-east-1
+   AWS_ACCESS_KEY_ID=your_access_key
+   AWS_SECRET_ACCESS_KEY=your_secret_key
+   AWS_S3_BUCKET=your_s3_bucket_name
+   AWS_SQS_QUEUE_URL=your_sqs_queue_url
+   
    # Application Configuration
    PORT=3000
    NODE_ENV=development
    ```
 
-4. Create a PostgreSQL database named `nest_auth_db`
-
-5. Run the application:
+4. **Database Setup**
    ```bash
-   npm run start:dev
+   # Create PostgreSQL database
+   createdb your_database_name
+   
+   # Run migrations (if using TypeORM migrations)
+   npm run migration:run
    ```
 
-## Development
+## 🚀 Running the Application
+
+### Development Mode
+```bash
+npm run start:dev
+```
+
+### Production Mode
+```bash
+npm run build
+npm run start:prod
+```
+
+### Debug Mode
+```bash
+npm run start:debug
+```
+
+## 🧪 Testing
 
 ```bash
-# Run in development mode
-npm run start:dev
-
-# Run tests
+# Unit tests
 npm run test
 
-# Run e2e tests
+# Test coverage
+npm run test:cov
+
+# E2E tests
 npm run test:e2e
 
-# Build for production
-npm run build
+# Test in watch mode
+npm run test:watch
 ```
+
+## 📚 API Documentation
+
+Once the application is running, you can access the Swagger API documentation at:
+```
+http://localhost:3000/api
+```
+
+### Main Endpoints
+
+#### Authentication
+- `POST /auth/register` - User registration
+- `POST /auth/login` - User login
+- `POST /auth/logout` - User logout
+
+#### Users
+- `GET /users` - Get all users (Admin only)
+- `GET /users/:id` - Get user by ID
+- `PUT /users/:id` - Update user
+- `PUT /users/:id/status` - Update user status
+
+#### Documents
+- `POST /documents` - Upload document
+- `GET /documents` - Get documents list
+- `GET /documents/:id` - Get document by ID
+- `PUT /documents/:id` - Update document
+- `DELETE /documents/:id` - Delete document
+
+#### Q&A
+- `POST /qa/ask` - Ask question about documents
+
+#### S3 Upload
+- `POST /s3-upload/presigned-url` - Get presigned URL for S3 upload
+
+## 🏗️ Project Structure
+
+```
+src/
+├── app/                    # Main application module
+├── auth/                   # Authentication module
+├── users/                  # User management
+├── document/               # Document management
+├── qa/                     # Q&A functionality
+├── s3Upload/               # S3 file upload
+├── service/                # Service authentication
+├── common/                 # Shared utilities
+│   ├── decorators/         # Custom decorators
+│   ├── guards/             # Authentication guards
+│   ├── interceptors/       # Response interceptors
+│   └── enums/              # Enumerations
+└── config/                 # Configuration files
+```
+
+## 🔐 Authentication & Authorization
+
+The application uses JWT-based authentication with role-based access control:
+
+- **User Roles**: Admin, User
+- **JWT Strategy**: Stateless authentication
+- **Role Guards**: Protect routes based on user roles
+- **IP Whitelisting**: Additional security for service endpoints
+
+## 📁 Document Processing
+
+Documents are processed asynchronously:
+1. User uploads document via S3
+2. Document metadata is stored in database
+3. Document is queued for processing
+4. RAG backend processes and indexes the document
+5. Document becomes searchable for Q&A
+
+## 🚀 Deployment
+
+### Docker Deployment
+```bash
+# Build the application
+npm run build
+
+# Build Docker image
+docker build -t document-management-backend .
+
+# Run container
+docker run -p 3000:3000 document-management-backend
+```
+
+### Environment Variables for Production
+- Set `NODE_ENV=production`
+- Disable `DB_SYNC` for production
+- Use strong JWT secrets
+- Configure proper CORS origins
+
+## 🔧 Configuration
+
+### Database Configuration
+- **TypeORM**: Configured for PostgreSQL
+- **Synchronization**: Auto-sync in development, manual in production
+- **Logging**: Configurable database query logging
+
+### AWS Services
+- **S3**: Document storage with presigned URLs
+- **SQS**: Asynchronous document processing queue
+- **Region**: Configurable AWS region
+
+## 📝 Code Quality
+
+- **ESLint**: Code linting with custom configuration
+- **Prettier**: Code formatting
+- **TypeScript**: Strict type checking
+- **Validation**: Class-validator for DTOs
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the UNLICENSED license.
+
+## 🆘 Support
+
+For support and questions:
+- Check the API documentation at `/api`
+- Review the test files for usage examples
+- Check the configuration files for setup options
+
+## 🔄 Related Services
+
+This backend integrates with:
+- **RAG Backend**: Python service for document processing and AI Q&A
+- **Frontend**: React-based user interface
+- **AWS Services**: S3, SQS for file storage and processing
