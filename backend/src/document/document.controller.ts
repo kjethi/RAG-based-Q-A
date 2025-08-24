@@ -19,6 +19,11 @@ export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all documents with optional filtering' })
+  @ApiQuery({ name: 'search', required: false, description: 'Search term for filename' })
+  @ApiQuery({ name: 'status', required: false, description: 'Filter by document status' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Pagination offset' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Pagination limit' })
   @ApiResponse({ 
     status: 200, 
     description: 'List of documents retrieved successfully',

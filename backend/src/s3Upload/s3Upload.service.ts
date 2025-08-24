@@ -87,7 +87,7 @@ export class S3UploadService {
     });
 
     const response = await this.s3.send(command);
-    return response.UploadId;
+    return response.UploadId!;
   }
 
   async getPresignedUrl(key: string, uploadId: string, partNumber: number) {
@@ -141,7 +141,7 @@ export class S3UploadService {
       s3Path: s3Result.Location || '',
     };
     this.sendMessageToQueue(file.id, messageBody);
-    return { location: s3Result.Location, file };
+    return { location: s3Result.Location, file, documentId: file.id };
   }
 
   async sendPendingDocuementInQueue(id?: string) {
@@ -158,7 +158,7 @@ export class S3UploadService {
       });
       documents = result.documents;
     }
-    if (!documents || documents.length === 0) return;
+    if (!documents || documents.length === 0) return "No documents are there to sent in queue ";
     for (const document of documents) {
       const messageBody: SqsMessage = {
         documentId: document.id, // link back to DB record
@@ -170,7 +170,7 @@ export class S3UploadService {
       };
       await this.sendMessageToQueue(document.id, messageBody);
     }
-    return { message: `${documents.length} document(s) sent to queue` };
+    return `${documents.length} document(s) sent to queue`;
   }
   async abortMultipartUpload(key: string, uploadId: string) {
     const command = new AbortMultipartUploadCommand({
