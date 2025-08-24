@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate, Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AuthLayout from "./components/auth/AuthLayout";
 import AppLayout from "./components/layout/AppLayout";
 import Login from "./components/auth/Login";
@@ -15,6 +17,18 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 function App() {
   return (
     <AuthProvider>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route element={<AuthLayout />}>

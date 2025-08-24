@@ -2,7 +2,7 @@
 
 import { AxiosError } from "axios";
 import { apiPost } from "./api";
-import type { User } from "../classes/user";
+import type { User } from "../classes/User";
 
 export type LoginForm = { email: string; password: string };
 
@@ -30,14 +30,28 @@ export const authService = {
     }
   },
 
-  async signUp(_input: SignUpInput): Promise<void> {
-    // TODO: Call backend API to sign up a new user
-    return;
+  async signUp(input: SignUpInput): Promise<{ token: string; user: User }> {
+    try {
+      const response = await apiPost("/auth/register", {
+        name: input.name,
+        email: input.email,
+        password: input.password,
+      });
+      const data = response.data as { data: { token: string; user: User } };
+      return data.data;
+    } catch (error) {
+      let errorDetail = "Something went wrong";
+      if (error instanceof AxiosError) {
+        errorDetail = error.response?.data?.message || error.response?.data?.error || "Registration failed";
+      }
+      return Promise.reject(errorDetail);
+    }
   },
-  
 
   async logout(): Promise<void> {
-    // TODO: Clear session/token and notify backend if needed
-    return;
+    // Clear auth cookies and redirect to login
+    const { removeAuthCookies } = await import("../utils/cookiesHelper");
+    removeAuthCookies();
+    window.location.href = "/login";
   },
 };

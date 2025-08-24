@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AuthContext } from "../authHook";
-import type { User } from "../classes/user";
+import type { User } from "../classes/User";
 import { getCookie } from "../utils/cookiesHelper";
 import { userService } from "../services/user";
 

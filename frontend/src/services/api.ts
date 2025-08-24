@@ -12,9 +12,7 @@ const API = axios.create({
 
 API.interceptors.request.use((config) => {
   // Append "Authorization" to request headers if found in the cookies.
-  const access_token = getCookie("access_token");
-  console.log("access_token",access_token);
-  
+  const access_token = getCookie("access_token");  
   // Set Header call
   if (config.headers?.common) {
     config.headers.common["Authorization"] = "Bearer " + access_token;
