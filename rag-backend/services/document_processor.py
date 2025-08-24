@@ -21,9 +21,9 @@ class DocumentProcessor:
         try:
             # Update status to processing
             await self.nest_api_service.update_injection_status(
-                documentId=documentId,
-                status="processing",
-                message=f"Document processing started (SQS attempt {sqs_attempt}/{max_sqs_attempts})"
+                documentId,
+                "processing",
+                f"Document processing started (SQS attempt {sqs_attempt}/{max_sqs_attempts})"
             )
             
             # Download file from S3
@@ -57,9 +57,9 @@ class DocumentProcessor:
                 
                 # Update status to completed
                 await self.nest_api_service.update_injection_status(
-                    documentId=documentId,
-                    status="completed",
-                    message=f"Successfully processed {len(text_chunks)} text chunks"
+                    documentId,
+                    "completed",
+                    f"Successfully processed {len(text_chunks)} text chunks"
                 )
                 
                 logger.info(f"Successfully processed document {file_key} with {len(text_chunks)} chunks")

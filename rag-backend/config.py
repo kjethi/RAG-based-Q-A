@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from typing import Optional
 
 load_dotenv()
 
@@ -21,8 +22,9 @@ class Settings:
     # Vector DB Configuration
     CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", "./chroma_db")
     
-    # NestJS API Configuration
-    NEST_API_BASE_URL = os.getenv("NEST_API_BASE_URL", "http://localhost:3001")
-    NEST_API_KEY = os.getenv("NEST_API_KEY")    
+    # Service Authentication
+    NEST_SERVICE_ID: str = os.getenv("NEST_SERVICE_ID", "python-rag-service")
+    NEST_SERVICE_SECRET: str = os.getenv("NEST_SERVICE_SECRET", "test-secret")
+    NEST_API_BASE_URL: str = os.getenv("NEST_API_BASE_URL", "http://localhost:3001")
 
 settings = Settings()

@@ -121,9 +121,9 @@ class SQSWorker:
                 logger.error(f"Document processing failed for file: {file_key}")
                 if sqs_attempt >= max_sqs_attempts:
                     await self.nest_api_service.update_injection_status(
-                        documentId=documentId,
-                        status="failed",
-                        message=f"Processing failed after {sqs_attempt} attempts",
+                        documentId,
+                        "failed",
+                        f"Processing failed after {sqs_attempt} attempts",
                     )
                     await asyncio.to_thread(self._delete_message, message)
             else:
