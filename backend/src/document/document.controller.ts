@@ -31,7 +31,7 @@ export class DocumentController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden - Insufficient permissions' })
-  async findAll(@Query() filterDto: FilterDocumentDto): Promise<DocumentsListResponseDto> {
+  async findAll(@Query() filterDto?: FilterDocumentDto): Promise<DocumentsListResponseDto> {
     const result = await this.documentService.findAll(filterDto);
     return {
       documents: result.documents as any, // Type assertion for now
