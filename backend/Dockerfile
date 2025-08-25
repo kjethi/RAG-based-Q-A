@@ -1,5 +1,5 @@
 # Multi-stage build for NestJS application
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS dependencies
 
 # Set working directory
 WORKDIR /app
@@ -7,8 +7,20 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install all dependencies (including dev dependencies for testing)
+RUN npm ci
+
+# Test stage
+FROM dependencies AS test
+
+# Copy source code
+COPY . .
+
+# Run tests with CI configuration
+RUN npm run test:ci
+
+# Build stage
+FROM dependencies AS builder
 
 # Copy source code
 COPY . .
