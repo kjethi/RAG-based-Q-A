@@ -12,6 +12,7 @@ import { DocumentModule } from './document/document.module';
 import { S3UploadModule } from './s3Upload/s3Upload.module';
 import { QaModule } from './qa/qa.module';
 import { ServiceAuthModule } from './service/service-auth.module';
+import { DatabaseSeederModule } from './database/database-seeder.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ServiceAuthModule } from './service/service-auth.module';
       useFactory: getDatabaseConfig,
       inject: [ConfigService],
     }),
+    DatabaseSeederModule,
     AuthModule,
     UsersModule,
     DocumentModule,
