@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../../authHook";
+import Button from "../ui/Button";
 
 function AppLayout() {
   const { user } = useAuth();
@@ -11,7 +12,8 @@ function AppLayout() {
             RAG App
           </Link>
 
-          <button
+
+          <Button
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
@@ -21,7 +23,7 @@ function AppLayout() {
             aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon" />
-          </button>
+          </Button>
 
           <div className="collapse navbar-collapse" id="appNavbar">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
@@ -36,11 +38,6 @@ function AppLayout() {
               <li className="nav-item">
                 <NavLink to="/documents" className="nav-link">
                   Documents
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/ingestion" className="nav-link">
-                  Ingestion
                 </NavLink>
               </li>
               <li className="nav-item">

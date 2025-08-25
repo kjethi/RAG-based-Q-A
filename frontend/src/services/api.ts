@@ -7,7 +7,7 @@ import Cookies from "universal-cookie";
 import { getCookie, removeAuthCookies } from "../utils/cookiesHelper";
 
 const API = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 API.interceptors.request.use((config) => {

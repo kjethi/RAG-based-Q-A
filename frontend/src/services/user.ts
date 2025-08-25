@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import type { User, UserRole } from "../classes/User";
-import { apiGet, apiPut } from "./api";
+import { apiGet, apiPatch } from "./api";
 import type { MetaData } from "../classes/MetaData";
 
 interface UserFilters {
@@ -53,6 +53,6 @@ export const userService = {
   },
 
   async updateUserRole(id: string, role: UserRole) {
-    await apiPut(`/users/${id}`, { role });
+    await apiPatch(`/users/${id}`, { role });
   },
 };

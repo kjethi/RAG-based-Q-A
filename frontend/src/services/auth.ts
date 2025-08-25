@@ -6,7 +6,7 @@ import type { User } from "../classes/User";
 
 export type LoginForm = { email: string; password: string };
 
-export type SignUpInput = {
+export type SignUpForm = {
   name: string;
   email: string;
   password: string;
@@ -30,7 +30,7 @@ export const authService = {
     }
   },
 
-  async signUp(input: SignUpInput): Promise<{ token: string; user: User }> {
+  async signUp(input: SignUpForm): Promise<{ token: string; user: User }> {
     try {
       const response = await apiPost("/auth/register", {
         name: input.name,

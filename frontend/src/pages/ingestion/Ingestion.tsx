@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import Button from '../../components/ui/Button'
 
 type IngestionJob = {
   id: string
@@ -73,7 +74,7 @@ function Ingestion() {
             <input className="form-check-input" type="checkbox" id="autoRefresh" checked={autoRefresh} onChange={(e) => setAutoRefresh(e.target.checked)} />
             <label className="form-check-label ms-2" htmlFor="autoRefresh">Auto-refresh</label>
           </div>
-          <button className="btn btn-primary" onClick={triggerIngestion}>Trigger Ingestion</button>
+          <Button className="btn btn-primary" onClick={triggerIngestion}>Trigger Ingestion</Button>
         </div>
       </div>
 
@@ -107,8 +108,8 @@ function Ingestion() {
                   </td>
                   <td>
                     <div className="btn-group btn-group-sm" role="group">
-                      <button className="btn btn-outline-light">Details</button>
-                      <button className="btn btn-outline-danger" disabled={j.status !== 'running'} onClick={() => cancelJob(j.id)}>Cancel</button>
+                      <Button className="btn btn-outline-light">Details</Button>
+                      <Button className="btn btn-outline-danger" disabled={j.status !== 'running'} onClick={() => cancelJob(j.id)}>Cancel</Button>
                     </div>
                   </td>
                 </tr>

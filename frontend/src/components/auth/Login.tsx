@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast"; // Add this import
 import { setAuthorizationHeader } from "../../services/api";
 import { setAuthCookies } from "../../utils/cookiesHelper";
 import { useAuth } from "../../authHook";
+import Button from "../ui/Button";
 
 function Login() {
   const {
@@ -103,13 +104,12 @@ function Login() {
           </div>
 
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting || !isValid}
-            >
-              {isSubmitting ? "Signing in…" : "Sign in"}
-            </button>
+            
+            <Button type="submit" isLoading={isSubmitting} disabled={!isValid} loadingText="Signing in…">
+              Sign in
+            </Button>
+
+
             <span className="text-secondary">
               No account?
               <Link className="link-primary" to="/signup">

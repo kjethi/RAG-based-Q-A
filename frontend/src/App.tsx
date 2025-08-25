@@ -7,12 +7,12 @@ import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 import Logout from "./components/auth/Logout";
 import UserManagement from "./pages/admin/UserManagement";
-import Documents from "./pages/documents/Documents";
 import Ingestion from "./pages/ingestion/Ingestion";
 import QA from "./pages/qa/QA";
 import PublicRoute from "./components/auth/PublicRoute";
 import { AuthProvider } from "./components/AuthProvider";
 import PrivateRoute from "./components/auth/PrivateRoute";
+import Documents from "./pages/documents/Documents";
 
 function App() {
   return (

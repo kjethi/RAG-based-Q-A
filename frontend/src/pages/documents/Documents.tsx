@@ -1,65 +1,22 @@
 import { useRef, useState, useEffect } from "react";
-import { documentService, type Document } from "../../services/document";
+import { documentService } from "../../services/document";
 import { s3UploadService } from "../../services/s3Upload";
 import { toast } from "react-toastify";
-
-type DocumentType = "pdf" | "image" | "text" | "other";
-
-
-// Helper function to map backend type to frontend type
-function mapType(backendType: string): DocumentType {
-  if (backendType.toLowerCase().includes("pdf")) return "pdf";
-  if (
-    backendType.toLowerCase().includes("image") ||
-    backendType.toLowerCase().includes("png") ||
-    backendType.toLowerCase().includes("jpg")
-  )
-    return "image";
-  if (
-    backendType.toLowerCase().includes("text") ||
-    backendType.toLowerCase().includes("txt")
-  )
-    return "text";
-  return "other";
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 B";
-  const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-}
-
-function badgeForType(type: string) {
-  const map: Record<DocumentType, string> = {
-    pdf: "danger",
-    image: "info",
-    text: "secondary",
-    other: "light",
-  };
-  const mappedType = mapType(type);
-  return (
-    <span className={`badge text-bg-${map[mappedType]}`}>{mappedType.toUpperCase()}</span>
-  );
-}
-
-function badgeForStatus(status: Document["status"]) {
-  const map = {
-    pending: "info",
-    completed: "success",
-    queued: "warning",
-    processing: "warning",
-    failed: "danger",
-  } as const;
-  return <span className={`badge text-bg-${map[status]}`}>{status}</span>;
-}
+import type { Doc } from "../../classes/Doc";
+import {
+  badgeForStatus,
+  badgeForType,
+  formatBytes,
+  mapType,
+} from "../../utils/documentHelper";
+import { useAuth } from "../../authHook";
+import Button from "../../components/ui/Button";
 
 function Documents() {
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [documents, setDocuments] = useState<Doc[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState<"all" | DocumentType>("all");
+  const { user } = useAuth();
   const [uploadingFiles, setUploadingFiles] = useState<
     Array<{
       file: File;
@@ -179,11 +136,8 @@ function Documents() {
       const totalParts = Math.ceil(file.size / CHUNK_SIZE);
       const parts: Array<{ ETag: string; PartNumber: number }> = [];
 
-      toast.info(`Uploading ${file.name} (${totalParts} parts)...`);
-
       // Step 3: Upload file parts
       for (let partNumber = 1; partNumber <= totalParts; partNumber++) {
-        
         const start = (partNumber - 1) * CHUNK_SIZE;
         const end = Math.min(start + CHUNK_SIZE, file.size);
         const chunk = file.slice(start, end);
@@ -325,7 +279,9 @@ function Documents() {
     if (!confirm("Are you sure you want to delete this document?")) return;
 
     try {
-      await documentService.deleteDocument(id);
+      // TODO : API is not implemented Yet
+      console.log("id", id);
+      // await documentService.deleteDocument(id);
       toast.success("Document deleted successfully");
       fetchDocuments(); // Refresh the list
     } catch (error) {
@@ -339,6 +295,18 @@ function Documents() {
       <div className="d-flex flex-wrap gap-2 align-items-center">
         <h1 className="h4 mb-0">Documents</h1>
         <div className="ms-auto d-flex flex-wrap gap-2">
+          {user?.role !== "viewer" && (
+            <Button className="btn btn-primary" onClick={openFilePicker}>
+              Upload
+            </Button>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="d-none"
+            multiple
+            onChange={(e) => handleFilesSelected(e.target.files)}
+          />
           <input
             type="search"
             className="form-control"
@@ -346,28 +314,6 @@ function Documents() {
             style={{ maxWidth: 260 }}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-          />
-          <select
-            className="form-select"
-            style={{ maxWidth: 180 }}
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as typeof typeFilter)}
-          >
-            <option value="all">All types</option>
-            <option value="pdf">PDF</option>
-            <option value="image">Image</option>
-            <option value="text">Text</option>
-            <option value="other">Other</option>
-          </select>
-          <button className="btn btn-primary" onClick={openFilePicker}>
-            Upload
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="d-none"
-            multiple
-            onChange={(e) => handleFilesSelected(e.target.files)}
           />
         </div>
       </div>
@@ -416,20 +362,20 @@ function Documents() {
                         </div>
                       )}
                       {fileInfo.status === "queued" && (
-                        <button
+                        <Button
                           className="btn btn-sm btn-outline-danger mt-1"
                           onClick={() => cancelUpload(idx)}
                         >
                           Cancel
-                        </button>
+                        </Button>
                       )}
                       {fileInfo.status === "error" && (
-                        <button
+                        <Button
                           className="btn btn-sm btn-outline-warning mt-1"
                           onClick={() => retryUpload(idx)}
                         >
                           Retry
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </div>
@@ -492,7 +438,7 @@ function Documents() {
                 <th style={{ width: 120 }}>Type</th>
                 <th style={{ width: 140 }}>Size</th>
                 <th style={{ width: 200 }}>Uploaded</th>
-                <th style={{ width: 140 }}>Status</th>
+                <th style={{ width: 140 }}>Ingestion Status</th>
                 <th style={{ width: 160 }}>Actions</th>
               </tr>
             </thead>
@@ -511,16 +457,16 @@ function Documents() {
                   <td>{badgeForStatus(d.status)}</td>
                   <td>
                     <div className="btn-group btn-group-sm" role="group">
-                      <button className="btn btn-outline-light">View</button>
-                      <button className="btn btn-outline-light">
+                      <Button className="btn btn-outline-light">View</Button>
+                      <Button className="btn btn-outline-light">
                         Download
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         className="btn btn-outline-danger"
                         onClick={() => handleDeleteDocument(d.id)}
                       >
                         Delete
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

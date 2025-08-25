@@ -23,47 +23,66 @@ export const s3UploadService = {
   async initUpload(filename: string): Promise<InitUploadResponse> {
     try {
       const response = await apiPost("/s3-upload/init", { filename });
-      const data = response.data as {data : InitUploadResponse}
+      const data = response.data as { data: InitUploadResponse };
       return data.data;
     } catch (error) {
       let errorDetail = "Failed to initialize upload";
       if (error instanceof AxiosError) {
-        errorDetail = error.response?.data?.message || error.response?.data?.error || errorDetail;
+        errorDetail =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          errorDetail;
       }
       return Promise.reject(errorDetail);
     }
   },
 
-  async getPresignedUrl(filename: string, uploadId: string, partNumber: number): Promise<PresignResponse> {
+  async getPresignedUrl(
+    filename: string,
+    uploadId: string,
+    partNumber: number
+  ): Promise<PresignResponse> {
     try {
       const response = await apiPost("/s3-upload/presign", {
         filename,
         uploadId,
         partNumber,
       });
-      const data = response.data as {data : PresignResponse}
+      const data = response.data as { data: PresignResponse };
       return data.data;
     } catch (error) {
       let errorDetail = "Failed to get presigned URL";
       if (error instanceof AxiosError) {
-        errorDetail = error.response?.data?.message || error.response?.data?.error || errorDetail;
+        errorDetail =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          errorDetail;
       }
       return Promise.reject(errorDetail);
     }
   },
 
-  async completeUpload(filename: string, uploadId: string, parts: UploadPart[]): Promise<CompleteUploadResponse> {
+  async completeUpload(
+    filename: string,
+    uploadId: string,
+    parts: UploadPart[]
+  ): Promise<CompleteUploadResponse> {
     try {
       const response = await apiPost("/s3-upload/complete", {
         filename,
         uploadId,
         parts,
       });
-      return response.data;
+
+      const data = response.data as { data: CompleteUploadResponse };
+      return data.data;
     } catch (error) {
       let errorDetail = "Failed to complete upload";
       if (error instanceof AxiosError) {
-        errorDetail = error.response?.data?.message || error.response?.data?.error || errorDetail;
+        errorDetail =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          errorDetail;
       }
       return Promise.reject(errorDetail);
     }
@@ -75,7 +94,10 @@ export const s3UploadService = {
     } catch (error) {
       let errorDetail = "Failed to delete document";
       if (error instanceof AxiosError) {
-        errorDetail = error.response?.data?.message || error.response?.data?.error || errorDetail;
+        errorDetail =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          errorDetail;
       }
       return Promise.reject(errorDetail);
     }
@@ -88,7 +110,10 @@ export const s3UploadService = {
     } catch (error) {
       let errorDetail = "Failed to send document to processing queue";
       if (error instanceof AxiosError) {
-        errorDetail = error.response?.data?.message || error.response?.data?.error || errorDetail;
+        errorDetail =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          errorDetail;
       }
       return Promise.reject(errorDetail);
     }

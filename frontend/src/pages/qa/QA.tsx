@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { qaService } from '../../services/qa'
 import { toast } from 'react-toastify'
+import Button from '../../components/ui/Button'
 
 type Source = {
   id: string
@@ -61,7 +62,7 @@ function QA() {
             <h2 className="h6">History</h2>
             <div className="list-group list-group-flush">
               {qaList.map((item) => (
-                <button
+                <Button
                   key={item.id}
                   className={`list-group-item list-group-item-action ${selectedId === item.id ? 'active' : ''}`}
                   onClick={() => setSelectedId(item.id)}
@@ -69,7 +70,7 @@ function QA() {
                 >
                   <div className="fw-medium text-truncate">{item.question}</div>
                   <div className="small text-truncate">{item.answer}</div>
-                </button>
+                </Button>
               ))}
               {qaList.length === 0 && (
                 <div className="text-secondary small">No questions yet</div>
@@ -93,7 +94,7 @@ function QA() {
                 />
                 {errors.query && <div className="invalid-feedback">{errors.query.message}</div>}
               </div>
-              <button 
+              <Button 
                 type="submit" 
                 className="btn btn-primary" 
                 disabled={isLoading}
@@ -106,7 +107,7 @@ function QA() {
                 ) : (
                   'Ask'
                 )}
-              </button>
+              </Button>
             </form>
           </div>
         </div>
@@ -149,9 +150,9 @@ function QA() {
                       </div>
                       <div className="text-secondary small mt-1">{s.snippet}</div>
                       <div className="mt-2 d-flex gap-2">
-                        <button className="btn btn-sm btn-outline-light">Open</button>
-                        <button className="btn btn-sm btn-outline-light">Preview</button>
-                        <button className="btn btn-sm btn-outline-light">Copy citation</button>
+                        <Button className="btn btn-sm btn-outline-light">Open</Button>
+                        <Button className="btn btn-sm btn-outline-light">Preview</Button>
+                        <Button className="btn btn-sm btn-outline-light">Copy citation</Button>
                       </div>
                     </div>
                   ))}

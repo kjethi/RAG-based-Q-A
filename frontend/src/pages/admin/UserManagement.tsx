@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { userService } from "../../services/user";
 import type { User } from "../../classes/User";
 import { toast } from "react-toastify";
+import Button from "../../components/ui/Button";
 
 type UserRole = "admin" | "viewer" | "editor";
 
@@ -143,13 +144,13 @@ function UserManagement() {
           <nav aria-label="User pagination">
             <ul className="pagination pagination-sm mb-0">
               <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
-                <button
+                <Button
                   className="page-link"
                   onClick={() => handlePageChange(page - 1)}
                   disabled={page === 1}
                 >
                   Previous
-                </button>
+                </Button>
               </li>
               
               {/* Page numbers */}
@@ -167,24 +168,24 @@ function UserManagement() {
                 
                 return (
                   <li key={pageNum} className={`page-item ${pageNum === page ? 'active' : ''}`}>
-                    <button
+                    <Button
                       className="page-link"
                       onClick={() => handlePageChange(pageNum)}
                     >
                       {pageNum}
-                    </button>
+                    </Button>
                   </li>
                 );
               })}
               
               <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
-                <button
+                <Button
                   className="page-link"
                   onClick={() => handlePageChange(page + 1)}
                   disabled={page === totalPages}
                 >
                   Next
-                </button>
+                </Button>
               </li>
             </ul>
           </nav>
@@ -268,14 +269,14 @@ function UserManagement() {
                   </td>
                   <td>
                     <div className="btn-group btn-group-sm" role="group">
-                      <button className="btn btn-outline-light">View</button>
-                      <button
+                      <Button className="btn btn-outline-light">View</Button>
+                      <Button
                         className="btn btn-outline-danger"
                         onClick={() => handleRemove(u.id)}
                         disabled={loading}
                       >
                         Remove
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
