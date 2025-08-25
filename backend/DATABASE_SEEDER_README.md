@@ -95,17 +95,17 @@ The seeder is automatically included in Docker builds and will run when the cont
 
 ```bash
 # Build with tests
-docker build --target test -t rag-backend-test .
+docker build --target test -t backend-test .
 
 # Build production image
-docker build -t rag-backend .
+docker build -t backend .
 ```
 
 ### Docker Run
 
 ```bash
 # Run container
-docker run -p 3000:3000 rag-backend
+docker run -p 3000:3000 backend
 
 # Check logs for seeding information
 docker logs <container_id>

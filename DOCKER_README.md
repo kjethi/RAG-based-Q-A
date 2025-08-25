@@ -20,6 +20,7 @@ cp env.template .env
 nano .env
 ```
 
+
 ### 3. Start All Services
 ```bash
 # Build and start all services
@@ -30,7 +31,15 @@ docker-compose logs -f
 
 # Check service status
 docker-compose ps
+
+# If you don't want to run all these command just hit below command 
+ ./start.sh start
+
+# For for infomation hit below command 
+ ./start.sh help
+ 
 ```
+
 
 ### 4. Access the Application
 - **Frontend**: http://localhost
